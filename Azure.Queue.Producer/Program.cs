@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Services;
+using Services.Queue;
 
 namespace Producer
 {

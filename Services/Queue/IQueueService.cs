@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Queue;
 
-namespace Services
+namespace Services.Queue
 {
     public interface IQueueService
     {

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 
-namespace Services
+namespace Services.Queue
 {
     public class QueueService : IQueueService
     {
@@ -19,12 +19,13 @@ namespace Services
         internal QueueService(string queueName, CloudStorageAccount storageAccount)
         {
             _queueClient = storageAccount.CreateCloudQueueClient();
-            _queue = this.CreateQueueIfNotExists(_queueClient.GetQueueReference(queueName));
+            _queue = this.CreateQueueIfNotExists(queueName);
         }
 
-        private CloudQueue CreateQueueIfNotExists(CloudQueue queue)
+        private CloudQueue CreateQueueIfNotExists(string queueName)
         {
-            queue.CreateIfNotExists();
+            var queue = _queueClient.GetQueueReference(queueName);
+            queue.CreateIfNotExistsAsync();
 
             return queue;
         }
