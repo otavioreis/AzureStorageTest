@@ -23,14 +23,28 @@ namespace Services.Table.ObjectModel
             RowKey = ID.ToString().ToLower();
         }
 
+        public TableEntityBase(Guid id, DateTime? createdAt)
+        {
+            this.ID = id;
+            this.CreatedAt = createdAt ?? DateTime.UtcNow;
+
+            PartitionKey = CreatedAt.ToString("yyyyMMddHH");
+            RowKey = ID.ToString().ToLower();
+        }
+
         public override IDictionary<string, EntityProperty> WriteEntity(OperationContext operationContext)
         {
             var parentType = this.GetType();
             var result = base.WriteEntity(operationContext);
-            var properties = parentType.GetProperties().Where(t => t.DeclaringType == parentType && !t.PropertyType.IsPrimitive &&
-                                                                   t.PropertyType != typeof(string) && t.PropertyType != typeof(DateTime));
+            var parentProperties = parentType.GetProperties().Where(t => t.DeclaringType == parentType &&
+                                                                         !t.PropertyType.IsPrimitive &&
+                                                                         t.PropertyType != typeof(string) &&
+                                                                         t.PropertyType != typeof(DateTime) &&
+                                                                         t.PropertyType != typeof(DateTime?) &&
+                                                                         t.PropertyType != typeof(DateTimeOffset) &&
+                                                                         t.PropertyType != typeof(DateTimeOffset?));
 
-            foreach (var property in properties)
+            foreach (var property in parentProperties)
             {
                 var parentName = property.Name;
                 var propertyInfos = property.PropertyType.GetProperties();
@@ -57,8 +71,13 @@ namespace Services.Table.ObjectModel
             base.ReadEntity(properties, operationContext);
 
             var parentType = this.GetType();
-            var parentProperties = parentType.GetProperties().Where(t => t.DeclaringType == parentType && !t.PropertyType.IsPrimitive &&
-                                                                   t.PropertyType != typeof(string) && t.PropertyType != typeof(DateTime));
+            var parentProperties = parentType.GetProperties().Where(t => t.DeclaringType == parentType && 
+                                                                         !t.PropertyType.IsPrimitive &&
+                                                                         t.PropertyType != typeof(string) &&
+                                                                         t.PropertyType != typeof(DateTime) &&
+                                                                         t.PropertyType != typeof(DateTime?) &&
+                                                                         t.PropertyType != typeof(DateTimeOffset) &&
+                                                                         t.PropertyType != typeof(DateTimeOffset?));
 
             foreach (var property in parentProperties)
             {

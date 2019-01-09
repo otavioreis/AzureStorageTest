@@ -48,9 +48,13 @@ namespace Services.Queue
 
         public async Task AddMessageAsync(CloudQueueMessage message)
         {
-            //TimeSpan.FromTicks(DateTime.Now.AddDays(5).Ticks);
-            //await _queue.AddMessageAsync(message, TimeSpan.FromDays(37), TimeSpan.FromSeconds(30), null, null);
             await _queue.AddMessageAsync(message);
+        }
+
+        public async Task AddMessageAsync(CloudQueueMessage message, TimeSpan? timeToLive, TimeSpan? initialVisibilityDelay)
+        {
+            //TimeSpan.FromTicks(DateTime.Now.AddDays(5).Ticks);
+            await _queue.AddMessageAsync(message, timeToLive, initialVisibilityDelay, null, null);
         }
 
         public async Task<CloudQueueMessage> GetMessageAsync(TimeSpan? visibilityTimeout = null)
@@ -83,6 +87,11 @@ namespace Services.Queue
         public async Task DeleteMessageAsync(CloudQueueMessage message)
         {
             await _queue.DeleteMessageAsync(message);
+        }
+
+        public async Task UpdateMessageAsync(CloudQueueMessage message, TimeSpan visibilityTimeout, MessageUpdateFields updateFields)
+        {
+            await _queue.UpdateMessageAsync(message, visibilityTimeout, updateFields);
         }
     }
 }

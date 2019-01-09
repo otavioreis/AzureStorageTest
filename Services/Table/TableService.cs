@@ -36,9 +36,9 @@ namespace Services.Table
         {
             TableOperation retrieveOperation = TableOperation.Retrieve<T>(partitionKey, rowKey);
             TableResult result = await _table.ExecuteAsync(retrieveOperation);
-            T customer = (T)result.Result;
+            T entity = (T)result.Result;
 
-            return customer;
+            return entity;
         }
 
         public async Task<T> InsertEntityAsync<T>(T entity) where T : ITableEntity

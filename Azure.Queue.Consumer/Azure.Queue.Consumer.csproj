@@ -34,6 +34,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Azure.CosmosDB.Table, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.Azure.Storage.Common, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Azure.Storage.Common.9.0.0.1-preview\lib\net45\Microsoft.Azure.Storage.Common.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=7.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\.nuget\packages\windowsazure.storage\7.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
@@ -58,6 +63,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Azure.Queue.Producer\Azure.Queue.Producer.csproj">
+      <Project>{10634990-E64C-4BDF-8BB5-6FBFFF6D24E0}</Project>
+      <Name>Azure.Queue.Producer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{BEECE6D8-4C21-4AF6-99C3-75C449D309B2}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Services\Services.csproj">
       <Project>{37BB38B3-A632-4E83-ADD6-732E25C39131}</Project>
       <Name>Services</Name>

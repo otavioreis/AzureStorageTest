@@ -6,20 +6,25 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Common.ObjectModel;
+using Producer.ObjectModel;
 using Services;
 using Services.Queue;
+using Services.Table;
 
 namespace Consumer
 {
     class Program
     {
         private static readonly IQueueService _queueService;
+        private static readonly ITableService _tableService;
         private static readonly DateTime _startExecution;
         private static int _countMessagesProcessed;
 
         static Program()
         {
             _queueService = new QueueService("otavioteste", ConfigurationManager.AppSettings["StorageConnectionString"]);
+            _tableService = new TableService("tableteste", ConfigurationManager.AppSettings["StorageConnectionString"]);
             _startExecution = DateTime.Now;
         }
 
@@ -30,7 +35,7 @@ namespace Consumer
             ServicePointManager.DefaultConnectionLimit = 100;
             var cancellationTokenSource = new CancellationTokenSource();
 
-            ConsumeMessages(cancellationTokenSource.Token).GetAwaiter().GetResult();
+            ConsumeMessages(cancellationTokenSource.Token, 1, 1).GetAwaiter().GetResult();
 
             Console.WriteLine("Pressione alguma tecla para finalizar o programa");
             Console.ReadKey();
@@ -67,6 +72,21 @@ namespace Consumer
                             {
                                 if (t.Result != null)
                                 {
+                                    try
+                                    {
+                                        var operation = await _tableService.RetrieveEntityUsingPointQueryAsync<Operation>(t.Result.InsertionTime.Value.ToString("yyyyMMddHH"), t.Result.Id);
+                                        operation.Processed = true;
+                                        operation.Success = true;
+                                        operation.TryCount = 1;
+                                        await _tableService.MergeEntityAsync(operation);
+                                    }
+                                    catch (Exception ex)
+                                    {
+
+                                        throw;
+                                    }   
+                                   
+
                                     results.Add(t.Result.AsString);
                                     await _queueService.DeleteMessageAsync(t.Result);
                                     Interlocked.Increment(ref _countMessagesProcessed);
