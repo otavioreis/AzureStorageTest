@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Common.ObjectModel;
+using Services.Queue;
+using Services.Table;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
@@ -6,11 +9,6 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.ObjectModel;
-using Producer.ObjectModel;
-using Services;
-using Services.Queue;
-using Services.Table;
 
 namespace Consumer
 {
